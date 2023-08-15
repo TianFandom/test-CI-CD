@@ -33,7 +33,7 @@ jobs:
       
     - name: Deploy to EC2
       run: |
-        rsync -avz --delete ./ ubuntu@<YOUR_EC2_IP>:/home/ubuntu/T_test/test-CI-CD/
+        rsync -avz --delete ./ ubuntu@184.72.238.169:/home/ubuntu/T_test/test-CI-CD/
       env:
         DEPLOY_KEY: ${{ secrets.BI3_SERVER_PRIVATE_KEY }}
 
