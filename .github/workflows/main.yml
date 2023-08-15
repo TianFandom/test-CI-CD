@@ -22,5 +22,10 @@ jobs:
             pip install -r requirements.txt
         fi
 
+        
+    - name: Install pytest
+      run: pip install pytest
+      
+      
     - name: Run tests
       run: pytest # Assuming you're using pytest for testing
