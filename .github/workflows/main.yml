@@ -28,4 +28,4 @@ jobs:
       
       
     - name: Run tests
-      run: pytest print_test.py # Assuming you're using pytest for testing
+      run: pytest # Assuming you're using pytest for testing
