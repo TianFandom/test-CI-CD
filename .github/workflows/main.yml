@@ -29,3 +29,11 @@ jobs:
       
     - name: Run tests
       run: pytest # Assuming you're using pytest for testing
+
+      
+    - name: Deploy to EC2
+      run: |
+        rsync -avz --delete ./ ubuntu@<YOUR_EC2_IP>:/home/ubuntu/T_test/test-CI-CD/
+      env:
+        DEPLOY_KEY: ${{ secrets.BI3_SERVER_PRIVATE_KEY }}
+
