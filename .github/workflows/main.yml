@@ -31,9 +31,25 @@ jobs:
       run: pytest # Assuming you're using pytest for testing
 
       
-    - name: Deploy to EC2
-      run: |
-        rsync -avz --delete ./ ubuntu@184.72.238.169:/home/ubuntu/T_test/test-CI-CD/
-      env:
-        DEPLOY_KEY: ${{ secrets.BI3_SERVER_PRIVATE_KEY }}
+    # - name: Deploy to EC2
+    #   run: |
+    #     rsync -avz --delete ./ ubuntu@184.72.238.169:/home/ubuntu/T_test/test-CI-CD/
+    #   env:
+    #     DEPLOY_KEY: ${{ secrets.BI3_SERVER_PRIVATE_KEY }}
+  deploy:
+    runs-on: ubuntu-latest
 
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Deploy to EC2
+      env:
+        PRIVATE_KEY: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
+        HOST: ip-18.212.172.79 # Replace with your EC2's public IP or domain name
+        USER: ubuntu
+      run: |
+        echo "$PRIVATE_KEY" > private_key.pem
+        chmod 600 private_key.pem
+        ssh -o StrictHostKeyChecking=no -i private_key.pem $USER@$HOST "cd test-CI-CD && git pull origin main"
+        rm -f private_key.pem
