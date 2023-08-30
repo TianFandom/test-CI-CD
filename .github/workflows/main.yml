@@ -14,6 +14,8 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
+      with:
+        fetch-depth: 0  # Fetch all history so we can diff
 
     - name: Install Flake8
       run: pip install flake8
@@ -21,13 +23,17 @@ jobs:
     - name: Get list of changed files
       id: getfile
       run: |
-        echo "CHANGED_FILES<<EOF" >> $GITHUB_ENV
-        git diff --name-only ${{ github.event.before }} ${{ github.sha }} >> $GITHUB_ENV
-        echo "EOF" >> $GITHUB_ENV
+        git fetch origin ${{ github.event.before }}  # Fetch the base commit
+        CHANGED_FILES=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }})
+        echo "CHANGED_FILES=${CHANGED_FILES}" >> $GITHUB_ENV
 
     - name: Run Flake8 on changed files
       run: |
-        flake8 ${{ env.CHANGED_FILES }}
+        if [ ! -z "$CHANGED_FILES" ]; then
+          echo $CHANGED_FILES | xargs flake8
+        else
+          echo "No files have changed."
+        fi
 
   deploy:
     runs-on: ubuntu-latest
