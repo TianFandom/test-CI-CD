@@ -15,10 +15,11 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
 
-    - name: Run Mega-Linter
-      uses: nvuillam/mega-linter@v4
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: Install Flake8
+      run: pip install flake8
+
+    - name: Run Flake8
+      run: flake8
 
   deploy:
     runs-on: ubuntu-latest
