@@ -15,10 +15,10 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v3  # Updated to latest version
 
-    - name: Set up Python
-      uses: actions/setup-python@v3  # Updated to latest version
-      with:
-        python-version: '3.8'
+    # - name: Set up Python
+    #   uses: actions/setup-python@v3  # Updated to latest version
+    #   with:
+    #     python-version: '3.8'
 
     - name: Install Flake8
       run: pip install flake8
