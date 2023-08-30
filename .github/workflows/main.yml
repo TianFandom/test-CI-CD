@@ -1,29 +1,63 @@
-name: Code Quality and Deployment Workflow
+# name: Code Quality and Deployment Workflow
 
-on:
-  push:
-    branches:
-      - master
-  pull_request:
-    branches:
-      - '*'
+# on:
+#   push:
+#     branches:
+#       - master
+#   pull_request:
+#     branches:
+#       - '*'
+
+# jobs:
+#   quality-check:
+#     runs-on: ubuntu-latest
+#     steps:
+#     - name: Checkout code
+#       uses: actions/checkout@v2
+
+#     - name: Run Mega-Linter
+#       uses: nvuillam/mega-linter@v4
+#       env:
+#         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+#   deploy:
+#     runs-on: ubuntu-latest
+#     needs: quality-check # Only run this job if quality-check job succeeds
+#     if: github.ref == 'refs/heads/master' # Only run if merging to master
+#     steps:
+#     - name: Checkout code
+#       uses: actions/checkout@v2
+
+#     - name: Deploy to EC2
+#       env:
+#         PRIVATE_KEY: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
+#         HOST: 18.212.172.79 # Replace with your EC2's public IP or domain name
+#         USER: ubuntu
+#       run: |
+#         echo "$PRIVATE_KEY" > private_key.pem
+#         chmod 600 private_key.pem
+#         ssh -o StrictHostKeyChecking=no -i private_key.pem $USER@$HOST "cd test-CI-CD && git pull origin main"
+#         rm -f private_key.pem
+name: Python CI/CD Workflow
+
+on: [push]
 
 jobs:
-  quality-check:
+  build:
     runs-on: ubuntu-latest
+
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
 
-    - name: Run Mega-Linter
-      uses: nvuillam/mega-linter@v4
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.8' # You can specify the version you need
 
   deploy:
     runs-on: ubuntu-latest
-    needs: quality-check # Only run this job if quality-check job succeeds
-    if: github.ref == 'refs/heads/master' # Only run if merging to master
+
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
