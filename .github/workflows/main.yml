@@ -27,12 +27,12 @@ jobs:
         CHANGED_FILES=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }})
         echo "CHANGED_FILES=${CHANGED_FILES}" >> $GITHUB_ENV
 
-    - name: Run Flake8 on changed files
+    - name: Run Flake8 on changed Python files
       run: |
         if [ ! -z "$CHANGED_FILES" ]; then
-          echo $CHANGED_FILES | xargs flake8
+          echo $CHANGED_FILES | tr ' ' '\n' | grep '\.py$' | xargs -r flake8
         else
-          echo "No files have changed."
+          echo "No Python files have changed."
         fi
 
   deploy:
