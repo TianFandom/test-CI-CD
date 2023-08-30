@@ -14,26 +14,20 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
-      with:
-        fetch-depth: 0  # Fetch all history for all branches and tags
 
     - name: Install Flake8
       run: pip install flake8
 
-    - name: Get list of changed Python files
+    - name: Get list of changed files
       id: getfile
       run: |
-        files=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep '.py$')
-        echo "Changed Python files: $files"
-        echo "::set-output name=files::$files"
+        echo "CHANGED_FILES<<EOF" >> $GITHUB_ENV
+        git diff --name-only ${{ github.event.before }} ${{ github.sha }} >> $GITHUB_ENV
+        echo "EOF" >> $GITHUB_ENV
 
     - name: Run Flake8 on changed files
       run: |
-        if [[ -n "${{ steps.getfile.outputs.files }}" ]]; then
-          flake8 ${{ steps.getfile.outputs.files }}
-        else
-          echo "No Python files have changed."
-        fi
+        flake8 ${{ env.CHANGED_FILES }}
 
   deploy:
     runs-on: ubuntu-latest
