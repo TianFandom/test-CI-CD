@@ -43,6 +43,11 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v3
 
+    - name: Configure Git
+      run: |
+        git config --global user.email "tchen@fandom.com"
+        git config --global user.name "GitHub Actions"
+
     - name: Revert last commit
       run: |
         git revert HEAD --no-edit
