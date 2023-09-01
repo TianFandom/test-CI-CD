@@ -35,28 +35,10 @@ jobs:
           echo "No Python files have changed."
         fi
 
-  revert-commit:
-    runs-on: ubuntu-latest
-    needs: quality-check
-    if: failure() && github.ref == 'refs/heads/main'
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
-
-    - name: Configure Git
-      run: |
-        git config --global user.email "tchen@fandom.com"
-        git config --global user.name "GitHub Actions"
-
-    - name: Revert last commit
-      run: |
-        git revert HEAD --no-edit
-        git push origin main
-
   deploy:
     runs-on: ubuntu-latest
     needs: quality-check
-    if: success() && github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/main'
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
